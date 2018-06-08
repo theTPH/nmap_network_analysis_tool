@@ -26,7 +26,22 @@ def create_tables(dbcon):
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS cve (
             id text,
-            productype text,
+            cpe text,
+            cvssscore text,
+            accessvector text,
+            authentication text,
+            confimpact text,
+            integrityimpact text,
+            availimpact text)""")
+    cursor.execute(
+        """CREATE TABLE IF NOT EXISTS join_test(
+            ipadress text,
+            portnumber text,
+            starttime text,
+            accuracy text,
+            cpe2 text,
+            id text,
+            cpe text,
             cvssscore text,
             accessvector text,
             authentication text,
@@ -155,11 +170,38 @@ def delete_duplicates(dbcon):
             WHERE rowid NOT IN (
             SELECT MIN(rowid)
             FROM cve
-            GROUP BY id, productype, cvssscore,accessvector,authentication,
+            GROUP BY id, cpe, cvssscore,accessvector,authentication,
+            confimpact,integrityimpact,availimpact )
+            """)    
+    cursor.execute("""DELETE FROM  join_test
+            WHERE rowid NOT IN (
+            SELECT MIN(rowid)
+            FROM join_test
+            GROUP BY ipadress, portnumber, starttime, accuracy, cpe,
+            id, cpe2, cvssscore,accessvector,authentication,
             confimpact,integrityimpact,availimpact )
             """)    
     dbcon.commit()
 
+def cve_nmap_compare(dbcon):
+    """
+    
+   compares stuff.
+    :param dbcon: sqlite3 database connection
+    :type dbcon: sqlite3.Connection
+    :raises: TypeError
+    """
+    
+    if not isinstance(dbcon, sqlite3.Connection):
+        raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
+    cursor = dbcon.cursor() 
+    cursor.execute("""SELECT * FROM scanner_test 
+            INNER JOIN cve ON scanner_test.cpe = cve.cpe
+            """)
+    for row in cursor.fetchall():
+        cursor.execute("INSERT INTO join_test VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ",row)
+    dbcon.commit()
+    print("compared")
 
 if __name__ == "__main__":
     conn = sqlite3.connect('/usr/home/tim/Documents/scandata.db')
@@ -167,5 +209,6 @@ if __name__ == "__main__":
     extract_cve(conn)
     #extract_nmap_results(conn)
     delete_duplicates(conn)
+    cve_nmap_compare(conn)
     print("... done")
     conn.close()
