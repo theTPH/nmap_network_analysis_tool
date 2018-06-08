@@ -10,6 +10,7 @@ def create_tables(dbcon):
     :type dbcon: sqlite3.Connection
     :raises: TypeError
     """
+    
     if not isinstance(dbcon, sqlite3.Connection):
         raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
 
@@ -36,6 +37,16 @@ def create_tables(dbcon):
 
 
 def extract_cve(dbcon):
+    """
+    
+    Parses and uploads Data from the cve xml to the database.
+    :param dbcon: sqlite3 database connection
+    :type dbcon: sqlite3.Connection
+    :raises: TypeError
+    """
+    
+    if not isinstance(dbcon, sqlite3.Connection):
+        raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
     #initialize cve tree
     cvetree = ET.parse('/usr/home/tim/Documents/nvdcve-2.0-modified.xml')
     cveroot = cvetree.getroot()
@@ -78,6 +89,16 @@ def extract_cve(dbcon):
       
                 
 def extract_nmap_results(dbcon):
+    """
+    
+    Parses and uploads Data from the nmapscan xml to the database.
+    :param dbcon: sqlite3 database connection
+    :type dbcon: sqlite3.Connection
+    :raises: TypeError
+    """
+    
+    if not isinstance(dbcon, sqlite3.Connection):
+        raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
     # initialize xml nmaptree
     nmaptree = ET.parse('/usr/home/tim/nmaptest.xml')
     nmaproot = nmaptree.getroot()
@@ -111,6 +132,16 @@ def extract_nmap_results(dbcon):
 
 
 def delete_duplicates(dbcon):
+    """
+    
+    Deletes duplicates from the Database.
+    :param dbcon: sqlite3 database connection
+    :type dbcon: sqlite3.Connection
+    :raises: TypeError
+    """
+    
+    if not isinstance(dbcon, sqlite3.Connection):
+        raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
     # delete unit removes duplicates by using the default uique rowid
     # Group by with all colums to get all ips and all scnas from a single ip
     cursor = dbcon.cursor() 
