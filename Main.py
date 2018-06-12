@@ -4,13 +4,13 @@ import sqlite3
 
 def create_tables(dbcon):
     """
-    Create all database tables as needed.
-    
+
+    Create all database tables as needed but only when they don't exist.
     :param dbcon: sqlite3 database connection
     :type dbcon: sqlite3.Connection
     :raises: TypeError
     """
-    
+
     if not isinstance(dbcon, sqlite3.Connection):
         raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
 
@@ -25,7 +25,7 @@ def create_tables(dbcon):
             cpe text)""")
     cursor.execute(
         """CREATE TABLE IF NOT EXISTS cve (
-            id text,
+            cveid text,
             cpe text,
             cvssscore text,
             accessvector text,
@@ -40,7 +40,7 @@ def create_tables(dbcon):
             starttime text,
             accuracy text,
             cpe2 text,
-            id text,
+            cveid text,
             cpe text,
             cvssscore text,
             accessvector text,
@@ -49,25 +49,22 @@ def create_tables(dbcon):
             integrityimpact text,
             availimpact text)""")
     dbcon.commit()
+    print('tables created')
 
 
-def extract_cve(dbcon):
+def extract_cve(cvexmlinput):
     """
-    
-    Parses and uploads Data from the cve xml to the database.
-    :param dbcon: sqlite3 database connection
-    :type dbcon: sqlite3.Connection
-    :raises: TypeError
+
+    Extracts Data from the CVE XML File and returns it.
+    :param cvexmlinput: XML file
+    :returns: List of strings
     """
-    
-    if not isinstance(dbcon, sqlite3.Connection):
-        raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
     #initialize cve tree
-    cvetree = ET.parse('/usr/home/tim/Documents/nvdcve-2.0-modified.xml')
+    cvetree = ET.parse(cvexmlinput)
     cveroot = cvetree.getroot()
     cverows = []
     for entry in cveroot.findall('./{http://scap.nist.gov/schema/feed/vulnerability/2.0}entry'):
-        id = entry.get('id')
+        cveid = entry.get('id')
         cvtag = entry.find('./{http://scap.nist.gov/schema/vulnerability/0.4}cvss/{http://scap.nist.gov/schema/cvss-v2/0.2}base_metrics')
         vultag = list(entry.findall('./{http://scap.nist.gov/schema/vulnerability/0.4}vulnerable-software-list/{http://scap.nist.gov/schema/vulnerability/0.4}product'))
         if  cvtag and vultag is not None:
@@ -79,57 +76,69 @@ def extract_cve(dbcon):
             avimo = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}availability-impact').text
             for vuln in vultag:
                 cpe = vuln.text
-                row = (id, cpe, cvsssc, accv, auth, confimp, intimp, avimo)
+                row = (cveid, cpe, cvsssc, accv, auth, confimp, intimp, avimo)
                 cverows.append(row)
-        elif cvtag is not None and vultag is None:        
+        elif cvtag is not None and vultag is None:
             cvsssc = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}score').text
             accv = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}access-vector').text
             auth = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}authentication').text
             confimp = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}confidentiality-impact').text
             intimp = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}integrity-impact').text
             avimo = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}availability-impact').text
-            row = (id, None, cvsssc, accv, auth, confimp, intimp, avimo)
+            row = (cveid, None, cvsssc, accv, auth, confimp, intimp, avimo)
             cverows.append(row)
         elif cvtag is None and vultag is not None:
             for vuln in vultag:
                 cpe = vuln.text
-                row = (id, cpe, None, None, None, None, None, None)
+                row = (cveid, cpe, None, None, None, None, None, None)
                 cverows.append(row)
         else:
-            row = (id, None, None, None, None, None, None, None)
+            row = (cveid, None, None, None, None, None, None, None)
             cverows.append(row)       
-    cursor = dbcon.cursor()        
-    dbcon.executemany("INSERT INTO cve VALUES (?,?,?,?,?,?,?,?)",cverows)
-    dbcon.commit()
-      
-                
-def extract_nmap_results(dbcon):
+    return cverows
+    print('extracted cve data')
+
+
+def insert_cve_in_database(cverows, dbcon):
     """
-    
-    Parses and uploads Data from the nmapscan xml to the database.
+
+    Uploads input data to the database.
     :param dbcon: sqlite3 database connection
     :type dbcon: sqlite3.Connection
     :raises: TypeError
     """
-    
+
     if not isinstance(dbcon, sqlite3.Connection):
         raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
+
+    dbcon.executemany("INSERT INTO cve VALUES(?,?,?,?,?,?,?,?)", cverows)
+    dbcon.commit()   
+    print('uploaded cve data')
+
+   
+def extract_nmap_results(nmapxmlinput):
+    """
+
+    Extracts data from NMAP-XML File and returns it.
+    :param nmapxmlinput: XML File
+    :returns: List of strings
+    """
     # initialize xml nmaptree
-    nmaptree = ET.parse('/usr/home/tim/nmaptest.xml')
+    nmaptree = ET.parse(nmapxmlinput)
     nmaproot = nmaptree.getroot()
     # for variable host find all nmaptree element called host
+    dbrows = []  # database rows to save
     for host in nmaproot.findall('host'):
-        dbrows = []  # database rows to save
         # add fields in xml.nmaptree to lists
         starttime = host.get('starttime')
         ipaddr = host.findall('address')[0].get('addr')
         portnumber = host.findall('./ports/port')[0].get('portid')
-        os_tags =list(host.findall('./os/osmatch/osclass'))
-        if 0 != len(os_tags):
+        os_tags = list(host.findall('./os/osmatch/osclass'))
+        if len(os_tags) != 0:
             for os in os_tags:
                 accu = os.get('accuracy')
                 cpe_tags = list(os.findall('cpe'))
-                if 0 != len(cpe_tags):
+                if len(cpe_tags) != 0:
                     for tag in cpe_tags:
                         cpe = tag.text
                         row = (ipaddr, portnumber, starttime, accu, cpe)
@@ -140,26 +149,41 @@ def extract_nmap_results(dbcon):
         else:
             row = (ipaddr, portnumber, starttime, '', '')
             dbrows.append(row)
-        cursor = dbcon.cursor()
-        cursor.executemany("INSERT INTO scanner_test VALUES (?,?,?,?,?)", dbrows)
+    return dbrows
+    print('extracted nmap data')
+
+
+def insert_nmap_in_database(dbrows, dbcon):
+    """
+
+    Inserts input Data into Scan Database.
+    :param dbcon: sqlite3 database connection
+    :type dbcon: sqlite3.Connection
+    :raises: TypeError
+    """
+
+    if not isinstance(dbcon, sqlite3.Connection):
+        raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
     
+    dbcon.executemany("INSERT INTO scanner_test VALUES (?,?,?,?,?)", dbrows)
     dbcon.commit()
+    print('uploaded nmap data')
 
 
 def delete_duplicates(dbcon):
     """
-    
+
     Deletes duplicates from the Database.
     :param dbcon: sqlite3 database connection
     :type dbcon: sqlite3.Connection
     :raises: TypeError
     """
-    
+
     if not isinstance(dbcon, sqlite3.Connection):
         raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
     # delete unit removes duplicates by using the default uique rowid
     # Group by with all colums to get all ips and all scnas from a single ip
-    cursor = dbcon.cursor() 
+    cursor = dbcon.cursor()
     cursor.execute("""DELETE FROM scanner_test
             WHERE rowid NOT IN (
             SELECT MIN(rowid)
@@ -170,45 +194,55 @@ def delete_duplicates(dbcon):
             WHERE rowid NOT IN (
             SELECT MIN(rowid)
             FROM cve
-            GROUP BY id, cpe, cvssscore,accessvector,authentication,
+            GROUP BY cveid, cpe, cvssscore,accessvector,authentication,
             confimpact,integrityimpact,availimpact )
-            """)    
+            """)
     cursor.execute("""DELETE FROM  join_test
             WHERE rowid NOT IN (
             SELECT MIN(rowid)
             FROM join_test
             GROUP BY ipadress, portnumber, starttime, accuracy, cpe,
-            id, cpe2, cvssscore,accessvector,authentication,
+            cveid, cpe2, cvssscore,accessvector,authentication,
             confimpact,integrityimpact,availimpact )
-            """)    
+            """)
     dbcon.commit()
+    print('duplicates deleted')
 
-def cve_nmap_compare(dbcon):
+
+def cve_nmap_join(dbcon):
     """
-    
-   compares stuff.
+
+    Joins the nmap and the cve table using the cpe  string.
+    Uploads result to database.
     :param dbcon: sqlite3 database connection
     :type dbcon: sqlite3.Connection
     :raises: TypeError
     """
-    
+
     if not isinstance(dbcon, sqlite3.Connection):
         raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
-    cursor = dbcon.cursor() 
-    cursor.execute("""SELECT * FROM scanner_test 
+    cursor = dbcon.cursor()
+    cursor.execute("""SELECT * FROM scanner_test
             INNER JOIN cve ON scanner_test.cpe = cve.cpe
             """)
+    print("cve and nmap joined")
     for row in cursor.fetchall():
-        cursor.execute("INSERT INTO join_test VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ",row)
+        cursor.execute("INSERT INTO join_test VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?) ", row)
     dbcon.commit()
-    print("compared")
+    print("uploaded join data")
 
 if __name__ == "__main__":
     conn = sqlite3.connect('/usr/home/tim/Documents/scandata.db')
     create_tables(conn)
-    extract_cve(conn)
-    #extract_nmap_results(conn)
+    
+    cves = extract_cve(cvexmlinput= '/usr/home/tim/Documents/nvdcve-2.0-modified.xml')
+    insert_cve_in_database(cves, conn)
+    
+    nmapdata = extract_nmap_results(nmapxmlinput= '/usr/home/tim/nmaptest.xml')
+    insert_nmap_in_database(nmapdata, conn)
+    
+    cve_nmap_join(conn)
+    
     delete_duplicates(conn)
-    cve_nmap_compare(conn)
     print("... done")
     conn.close()
