@@ -1,4 +1,10 @@
 #!/usr/bin/env python3
+"""
+
+This programm extracts data from an CVE-XML and an NMAP-XML. Uploads this data
+to a database and then joins it to get a list of possible dangerous hosts
+in the scanned network.
+"""
 import xml.etree.ElementTree as ET
 import sqlite3
 
@@ -94,9 +100,9 @@ def extract_cve(cvexmlinput):
                 cverows.append(row)
         else:
             row = (cveid, None, None, None, None, None, None, None)
-            cverows.append(row)       
-    return cverows
+            cverows.append(row)
     print('extracted cve data')
+    return cverows
 
 
 def insert_cve_in_database(cverows, dbcon):
@@ -112,10 +118,10 @@ def insert_cve_in_database(cverows, dbcon):
         raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
 
     dbcon.executemany("INSERT INTO cve VALUES(?,?,?,?,?,?,?,?)", cverows)
-    dbcon.commit()   
+    dbcon.commit()
     print('uploaded cve data')
 
-   
+
 def extract_nmap_results(nmapxmlinput):
     """
 
@@ -149,8 +155,8 @@ def extract_nmap_results(nmapxmlinput):
         else:
             row = (ipaddr, portnumber, starttime, '', '')
             dbrows.append(row)
-    return dbrows
     print('extracted nmap data')
+    return dbrows
 
 
 def insert_nmap_in_database(dbrows, dbcon):
@@ -164,7 +170,7 @@ def insert_nmap_in_database(dbrows, dbcon):
 
     if not isinstance(dbcon, sqlite3.Connection):
         raise TypeError("parameter 'dbcon' not of type 'sqlite3.Connection'")
-    
+
     dbcon.executemany("INSERT INTO scanner_test VALUES (?,?,?,?,?)", dbrows)
     dbcon.commit()
     print('uploaded nmap data')
@@ -234,15 +240,15 @@ def cve_nmap_join(dbcon):
 if __name__ == "__main__":
     conn = sqlite3.connect('/usr/home/tim/Documents/scandata.db')
     create_tables(conn)
-    
-    cves = extract_cve(cvexmlinput= '/usr/home/tim/Documents/nvdcve-2.0-modified.xml')
+
+    cves = extract_cve(cvexmlinput='/usr/home/tim/Documents/nvdcve-2.0-modified.xml')
     insert_cve_in_database(cves, conn)
-    
-    nmapdata = extract_nmap_results(nmapxmlinput= '/usr/home/tim/nmaptest.xml')
+
+    nmapdata = extract_nmap_results(nmapxmlinput='/usr/home/tim/nmaptest.xml')
     insert_nmap_in_database(nmapdata, conn)
-    
+
     cve_nmap_join(conn)
-    
+
     delete_duplicates(conn)
     print("... done")
     conn.close()
