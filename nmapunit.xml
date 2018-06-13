@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<?xml-stylesheet href="file:///usr/local/share/nmap/nmap.xsl" type="text/xsl"?>
+<!-- Nmap 7.60 scan initiated Wed May 30 10:11:21 2018 as: nmap -sS -oX nmaptest.xml -O -p443 10.15.0.0/16 -->
+<nmaprun scanner="nmap" args="nmap -sS -oX nmaptest.xml -O -p443 10.15.0.0/16" start="1527667881" startstr="Wed May 30 10:11:21 2018" version="7.60" xmloutputversion="1.04">
+<scaninfo type="syn" protocol="tcp" numservices="1" services="443"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1527667881" endtime="1527668870"><status state="up" reason="reset" reason_ttl="255"/>
+<address addr="10.15.0.0" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="443"><state state="closed" reason="reset" reason_ttl="255"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<os><portused state="closed" proto="tcp" portid="443"/>
+<osmatch name="Asus RT-53N WAP" accuracy="86" line="7874">
+<osclass type="WAP" vendor="Asus" osfamily="embedded" accuracy="86"><cpe>cpe:/h:asus:rt-53n</cpe></osclass>
+</osmatch>
+<osmatch name="Cisco ASA 5510 firewall (PIX OS 8.2)" accuracy="86" line="18042">
+<osclass type="firewall" vendor="Cisco" osfamily="PIX OS" osgen="6.X" accuracy="86"><cpe>cpe:/o:cisco:pix_os:6</cpe></osclass>
+</osmatch>
+<osmatch name="Cisco 6506 router (IOS 12.2)" accuracy="85" line="15403">
+<osclass type="router" vendor="Cisco" osfamily="IOS" osgen="12.X" accuracy="85"><cpe>cpe:/h:cisco:6506_router</cpe><cpe>cpe:/o:cisco:ios:12.2</cpe></osclass>
+</osmatch>
+<osmatch name="Cisco C2960 switch (IOS 12.2)" accuracy="85" line="16504">
+<osclass type="switch" vendor="Cisco" osfamily="IOS" osgen="12.X" accuracy="85"><cpe>cpe:/h:cisco:catalyst_2960</cpe><cpe>cpe:/o:cisco:ios:12.2</cpe></osclass>
+</osmatch>
+<osmatch name="Cisco NX-OS 4.0(1a)N1(1)" accuracy="85" line="17671">
+<osclass type="switch" vendor="Cisco" osfamily="NX-OS" osgen="4.X" accuracy="85"><cpe>cpe:/o:cisco:nx_os:4.0</cpe></osclass>
+</osmatch>
+<osmatch name="Citrix NetScaler load balancer" accuracy="85" line="18185">
+<osclass type="load balancer" vendor="Citrix" osfamily="embedded" accuracy="85"/>
+</osmatch>
+<osmatch name="HP-UX B.11.11 - B.11.23" accuracy="85" line="33691">
+<osclass type="general purpose" vendor="HP" osfamily="HP-UX" osgen="11.X" accuracy="85"><cpe>cpe:/o:hp:hp-ux:11.11</cpe></osclass>
+</osmatch>
+<osmatch name="Microsoft Windows Server 2003 SP2" accuracy="85" line="69538">
+<osclass type="general purpose" vendor="Microsoft" osfamily="Windows" osgen="2003" accuracy="85"><cpe>cpe:/o:microsoft:windows_server_2003::sp2</cpe></osclass>
+</osmatch>
+<osmatch name="Palo Alto PA-500 firewall" accuracy="85" line="87183">
+<osclass type="firewall" vendor="Palo Alto" osfamily="embedded" accuracy="85"><cpe>cpe:/h:paloalto:pa-500</cpe></osclass>
+</osmatch>
+<osmatch name="Vodafone EasyBox 802 wireless ADSL router" accuracy="85" line="98518">
+<osclass type="WAP" vendor="Vodafone" osfamily="embedded" accuracy="85"><cpe>cpe:/h:vodafone:easybox_802</cpe></osclass>
+</osmatch>
+</os>
+<times srtt="5069" rttvar="5793" to="100000"/>
+</host>
+<host starttime="1527667881" endtime="1527668764"><status state="up" reason="reset" reason_ttl="255"/>
+<address addr="10.15.0.1" addrtype="ipv4"/>
+<hostnames>
+</hostnames>
+<ports><port protocol="tcp" portid="443"><state state="filtered" reason="no-response" reason_ttl="0"/><service name="https" method="table" conf="3"/></port>
+</ports>
+<os></os>
+<times srtt="1001" rttvar="5000" to="100000"/>
+</host>
+</nmaprun>

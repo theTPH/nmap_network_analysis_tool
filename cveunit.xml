@@ -1,0 +1,115 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<nvd xmlns:patch="http://scap.nist.gov/schema/patch/0.1" xmlns="http://scap.nist.gov/schema/feed/vulnerability/2.0" xmlns:cpe-lang="http://cpe.mitre.org/language/2.0" xmlns:cvss="http://scap.nist.gov/schema/cvss-v2/0.2" xmlns:scap-core="http://scap.nist.gov/schema/scap-core/0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:vuln="http://scap.nist.gov/schema/vulnerability/0.4" nvd_xml_version="2.0" pub_date="2018-06-06T08:00:24" xsi:schemaLocation="http://scap.nist.gov/schema/patch/0.1 https://scap.nist.gov/schema/nvd/patch_0.1.xsd http://scap.nist.gov/schema/feed/vulnerability/2.0 https://scap.nist.gov/schema/nvd/nvd-cve-feed_2.0.xsd http://scap.nist.gov/schema/scap-core/0.1 https://scap.nist.gov/schema/nvd/scap-core_0.1.xsd">
+  <entry id="CVE-2005-4900">
+    <vuln:vulnerable-configuration id="http://nvd.nist.gov/">
+      <cpe-lang:logical-test operator="OR" negate="false">
+        <cpe-lang:fact-ref name="cpe:/a:google:chrome:47.0.2526.111"/>
+      </cpe-lang:logical-test>
+    </vuln:vulnerable-configuration>
+    <vuln:vulnerable-software-list>
+      <vuln:product>cpe:/a:google:chrome:47.0.2526.111</vuln:product>
+    </vuln:vulnerable-software-list>
+    <vuln:cve-id>CVE-2005-4900</vuln:cve-id>
+    <vuln:published-datetime>2016-10-14T12:59:00.187-04:00</vuln:published-datetime>
+    <vuln:last-modified-datetime>2018-05-29T21:29:00.297-04:00</vuln:last-modified-datetime>
+    <vuln:cvss>
+      <cvss:base_metrics>
+        <cvss:score>4.3</cvss:score>
+        <cvss:access-vector>NETWORK</cvss:access-vector>
+        <cvss:access-complexity>MEDIUM</cvss:access-complexity>
+        <cvss:authentication>NONE</cvss:authentication>
+        <cvss:confidentiality-impact>PARTIAL</cvss:confidentiality-impact>
+        <cvss:integrity-impact>NONE</cvss:integrity-impact>
+        <cvss:availability-impact>NONE</cvss:availability-impact>
+        <cvss:source>http://nvd.nist.gov</cvss:source>
+        <cvss:generated-on-datetime>2016-10-17T18:14:16.367-04:00</cvss:generated-on-datetime>
+      </cvss:base_metrics>
+    </vuln:cvss>
+    <vuln:cwe id="CWE-326"/>
+    <vuln:references xml:lang="en" reference_type="VENDOR_ADVISORY">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="http://ia.cr/2007/474" xml:lang="en">http://ia.cr/2007/474</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="UNKNOWN">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="http://shattered.io/" xml:lang="en">http://shattered.io/</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="UNKNOWN">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="http://www.cwi.nl/news/2017/cwi-and-google-announce-first-collision-industry-security-standard-sha-1" xml:lang="en">http://www.cwi.nl/news/2017/cwi-and-google-announce-first-collision-industry-security-standard-sha-1</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="UNKNOWN">
+      <vuln:source>BID</vuln:source>
+      <vuln:reference href="http://www.securityfocus.com/bid/12577" xml:lang="en">12577</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="UNKNOWN">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="https://arstechnica.com/security/2017/02/at-deaths-door-for-years-widely-used-sha1-function-is-now-dead/" xml:lang="en">https://arstechnica.com/security/2017/02/at-deaths-door-for-years-widely-used-sha1-function-is-now-dead/</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="VENDOR_ADVISORY">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="https://security.googleblog.com/2015/12/an-update-on-sha-1-certificates-in.html" xml:lang="en">https://security.googleblog.com/2015/12/an-update-on-sha-1-certificates-in.html</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="UNKNOWN">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="https://security.googleblog.com/2017/02/announcing-first-sha1-collision.html" xml:lang="en">https://security.googleblog.com/2017/02/announcing-first-sha1-collision.html</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="VENDOR_ADVISORY">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="https://sites.google.com/site/itstheshappening" xml:lang="en">https://sites.google.com/site/itstheshappening</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="VENDOR_ADVISORY">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="https://www.schneier.com/blog/archives/2005/02/sha1_broken.html" xml:lang="en">https://www.schneier.com/blog/archives/2005/02/sha1_broken.html</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="VENDOR_ADVISORY">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="https://www.schneier.com/blog/archives/2005/08/new_cryptanalyt.html" xml:lang="en">https://www.schneier.com/blog/archives/2005/08/new_cryptanalyt.html</vuln:reference>
+    </vuln:references>
+    <vuln:summary>SHA-1 is not collision resistant, which makes it easier for context-dependent attackers to conduct spoofing attacks, as demonstrated by attacks on the use of SHA-1 in TLS 1.2.  NOTE: this CVE exists to provide a common identifier for referencing this SHA-1 issue; the existence of an identifier is not, by itself, a technology recommendation.</vuln:summary>
+  </entry>
+  <entry id="CVE-2012-3350">
+    <vuln:vulnerable-configuration id="http://nvd.nist.gov/">
+      <cpe-lang:logical-test operator="OR" negate="false">
+        <cpe-lang:fact-ref name="cpe:/a:valarsoft:webmatic:3.1.1"/>
+      </cpe-lang:logical-test>
+    </vuln:vulnerable-configuration>
+    <vuln:vulnerable-software-list>
+      <vuln:product>cpe:/a:valarsoft:webmatic:3.1.1</vuln:product>
+    </vuln:vulnerable-software-list>
+    <vuln:cve-id>CVE-2012-3350</vuln:cve-id>
+    <vuln:published-datetime>2012-07-12T17:55:07.157-04:00</vuln:published-datetime>
+    <vuln:last-modified-datetime>2018-05-29T10:16:14.340-04:00</vuln:last-modified-datetime>
+    <vuln:cvss>
+      <cvss:base_metrics>
+        <cvss:score>6.8</cvss:score>
+        <cvss:access-vector>NETWORK</cvss:access-vector>
+        <cvss:access-complexity>MEDIUM</cvss:access-complexity>
+        <cvss:authentication>NONE</cvss:authentication>
+        <cvss:confidentiality-impact>PARTIAL</cvss:confidentiality-impact>
+        <cvss:integrity-impact>PARTIAL</cvss:integrity-impact>
+        <cvss:availability-impact>PARTIAL</cvss:availability-impact>
+        <cvss:source>http://nvd.nist.gov</cvss:source>
+        <cvss:generated-on-datetime>2018-05-29T08:53:43.067-04:00</cvss:generated-on-datetime>
+      </cvss:base_metrics>
+    </vuln:cvss>
+  </entry>
+  <entry id="CVE-2014-10068">
+    <vuln:cve-id>CVE-2014-10068</vuln:cve-id>
+    <vuln:published-datetime>2018-05-29T16:29:00.283-04:00</vuln:published-datetime>
+    <vuln:last-modified-datetime>2018-05-29T16:29:00.297-04:00</vuln:last-modified-datetime>
+    <vuln:references xml:lang="en" reference_type="UNKNOWN">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="https://github.com/hapijs/inert/commit/e8f99f94da4cb08e8032eda984761c3f111e3e82" xml:lang="en">https://github.com/hapijs/inert/commit/e8f99f94da4cb08e8032eda984761c3f111e3e82</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="UNKNOWN">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="https://github.com/hapijs/inert/pull/15" xml:lang="en">https://github.com/hapijs/inert/pull/15</vuln:reference>
+    </vuln:references>
+    <vuln:references xml:lang="en" reference_type="UNKNOWN">
+      <vuln:source>MISC</vuln:source>
+      <vuln:reference href="https://nodesecurity.io/advisories/14" xml:lang="en">https://nodesecurity.io/advisories/14</vuln:reference>
+    </vuln:references>
+    <vuln:summary>The inert directory handler in inert node module before 1.1.1 always allows files in hidden directories to be served, even when `showHidden` is false.</vuln:summary>
+  </entry>
+</nvd>
