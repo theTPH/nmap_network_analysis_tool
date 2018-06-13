@@ -73,7 +73,7 @@ def extract_cve(cvexmlinput):
         cveid = entry.get('id')
         cvtag = entry.find('./{http://scap.nist.gov/schema/vulnerability/0.4}cvss/{http://scap.nist.gov/schema/cvss-v2/0.2}base_metrics')
         vultag = list(entry.findall('./{http://scap.nist.gov/schema/vulnerability/0.4}vulnerable-software-list/{http://scap.nist.gov/schema/vulnerability/0.4}product'))
-        if  cvtag and vultag is not None:
+        if  cvtag and vultag:
             cvsssc = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}score').text
             accv = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}access-vector').text
             auth = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}authentication').text
@@ -84,7 +84,7 @@ def extract_cve(cvexmlinput):
                 cpe = vuln.text
                 row = (cveid, cpe, cvsssc, accv, auth, confimp, intimp, avimo)
                 cverows.append(row)
-        elif cvtag is not None and vultag is None:
+        elif cvtag and not vultag:
             cvsssc = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}score').text
             accv = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}access-vector').text
             auth = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}authentication').text
@@ -93,7 +93,7 @@ def extract_cve(cvexmlinput):
             avimo = cvtag.find('./{http://scap.nist.gov/schema/cvss-v2/0.2}availability-impact').text
             row = (cveid, None, cvsssc, accv, auth, confimp, intimp, avimo)
             cverows.append(row)
-        elif cvtag is None and vultag is not None:
+        elif not cvtag and vultag:
             for vuln in vultag:
                 cpe = vuln.text
                 row = (cveid, cpe, None, None, None, None, None, None)
@@ -101,6 +101,7 @@ def extract_cve(cvexmlinput):
         else:
             row = (cveid, None, None, None, None, None, None, None)
             cverows.append(row)
+            print('plings')
     print('extracted cve data')
     return cverows
 
@@ -150,10 +151,10 @@ def extract_nmap_results(nmapxmlinput):
                         row = (ipaddr, portnumber, starttime, accu, cpe)
                         dbrows.append(row)
                 else:
-                    row = (ipaddr, portnumber, starttime, accu, '')
+                    row = (ipaddr, portnumber, starttime, accu, None)
                     dbrows.append(row)
         else:
-            row = (ipaddr, portnumber, starttime, '', '')
+            row = (ipaddr, portnumber, starttime, None, None)
             dbrows.append(row)
     print('extracted nmap data')
     return dbrows
@@ -241,10 +242,10 @@ if __name__ == "__main__":
     conn = sqlite3.connect('/usr/home/tim/Documents/scandata.db')
     create_tables(conn)
 
-    cves = extract_cve(cvexmlinput='/usr/home/tim/Documents/nvdcve-2.0-modified.xml')
+    cves = extract_cve(cvexmlinput='/usr/home/tim/Documents/cveunit.xml')
     insert_cve_in_database(cves, conn)
 
-    nmapdata = extract_nmap_results(nmapxmlinput='/usr/home/tim/nmaptest.xml')
+    nmapdata = extract_nmap_results(nmapxmlinput='/usr/home/tim/Documents/nmapunit.xml')
     insert_nmap_in_database(nmapdata, conn)
 
     cve_nmap_join(conn)
